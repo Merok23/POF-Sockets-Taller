@@ -3,6 +3,7 @@
 //Socket is heavily based on the class given material, if I had more time, it would be more original
 
 // if it has 2 parameters it will create a socket and try to connect to the ip and port given
+
 Socket::Socket(const char* ip, const char* port){
     Resolver resolver(ip, port, false); //false because it is not passive, its trying to connect to the server.
     int error = -1;
@@ -53,7 +54,7 @@ Socket::Socket(const char* port){
 }
 
 int Socket::sendData(const char* data, size_t size){
-    int size_sent = 0;
+    size_t size_sent = 0;
     while(size_sent < size){
         int sent = send(this->file_descriptor, data + size_sent, size - size_sent, 0);
         if(sent == -1){
@@ -65,7 +66,7 @@ int Socket::sendData(const char* data, size_t size){
 }
 
 int Socket::receiveData(char* buffer, size_t size){
-    int size_received = 0;
+    size_t size_received = 0;
     while(size_received < size){
         int received = recv(this->file_descriptor, buffer + size_received, size - size_received, 0);
         if(received == -1){

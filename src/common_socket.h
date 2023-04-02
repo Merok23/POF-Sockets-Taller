@@ -20,6 +20,8 @@ private:
     bool connected;//this is a flag that indicates if the socket is open or not (if it is connected or not)(open is connected)
 
 public:
+    Socket();
+    
     Socket(const char* ip, const char* port);//for connecting
 
     Socket(const char* port);//for listening

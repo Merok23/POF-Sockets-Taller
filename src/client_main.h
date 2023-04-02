@@ -1,17 +1,17 @@
 #include "common_socket.h"
+#include "message.h"
 
 class Client{
-    Socket socket;
+ //   Socket socket;
 
     public:
 
-        Client(const int ip,const int port,const char* filename);
-        
+        Client(const char* ip,const char* port);      
         int readFromFile(const char* filename);
-        int sendMessage(const char* message);
+        int sendMessage(const u_int32_t message, size_t size);
         int recieveMessage(const char* buffer);
         int printStatus(const char* recievedStatus);
-        int closeConnection();
+//        int closeConnection();
 
         ~Client();
 };

@@ -4,61 +4,47 @@
 #include <stdlib.h>
 
 
-class Client{
-    Socket socket;
-    Protocol protocol;
+Client::Client(const char* ip,const char* port){
+    //socket = Socket(ip, port);
+    //si falla el socket aca iria excepcion
+    return;
+}
 
-    public:
+int Client::readFromFile(const char* filename){
+    FILE* archivo = fopen(filename, "r");
+    if (archivo == NULL){
+        return -1;
+    }
+    char* buffer = NULL;
+    size_t len = 0;
 
-        Client(const int ip,const int port){
-            socket = Socket(ip, port);
-            //si falla el socket aca iria excepcion
-        }
+    while(getline(&buffer, &len, archivo) != -1){
+        if(strlen(buffer) == 1) continue;
+        Message message(buffer, len);
+        printf("This is the action: %s", buffer);
+        u_int32_t data = message.toBytes(buffer, sizeof(u_int32_t));
+        sendMessage(data, len);
+    }
+    free(buffer);
+    fclose(archivo);
+    return 0;
+}
 
-        int
-        
-        int readFromFile(const char* filename){
-            FILE* archivo = fopen(filename, "r");
+int Client::sendMessage(u_int32_t message, size_t size){
+    printf("This is the message in decimals: %d\n", message);
+    printf("This is the message in hex: %X\n", message);
+    //socket.sendData((char*) &message, size);
+    return 0;
+}
 
-            if (archivo == NULL){
-                return -1;
-            }
-            char* buffer = NULL;
-            size_t len = 0;
-
-            while(getline(&buffer, &len, archivo) != -1){
-                if(validLine(buffer, len)){
-                    sendMessage(buffer);
-                }
-            }
-            free(buffer);
-            fclose(archivo);
-            return 0;
-        }
-
-
-        int sendMessage(const char* message){
-            size_t size;
-            printf("Message: %s\n", message);
-
-            char* byte_message = protocol.translate(message, &size);
-            
-            //socket.sendData(byte_message, size);
-            return 0;
-
-        }
-
-        int recieveMessage(const char* buffer);
-        int printStatus(const char* recievedStatus);
-        int closeConnection();
-
-        ~Client();
-        private:
-        bool validLine(const char* line,const size_t len){
-            Message message(line, len);
-            return message.isValid();
-        }
-};
+/*
+int Client::recieveMessage(const char* buffer);
+int Client::printStatus(const char* recievedStatus);
+int Client::closeConnection();
+*/
+Client::~Client(){
+    //socket.disconnect(); 
+}
 
 int main(int argc, char* argv[]){
     if (argc != 4){
@@ -67,13 +53,12 @@ int main(int argc, char* argv[]){
     }
 
     char* ip = argv[1];
-    int port = (int) argv[2];
+    char* port = argv[2];
     char* path = argv[3];
-    int numeric_ip = transformIp(ip); //removes the "." and transforms the ip into a number
 
-    Client client(numeric_ip, port);
-    printf("My ip is: %d and my port is: %d", client.getIp(), port);
+    Client client(ip, port);
     client.readFromFile(path);
-    client.closeConnection();
+
+//    client.closeConnection();
     return 0;
 }

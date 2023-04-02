@@ -1,0 +1,10 @@
+NOP
+Reload
+Shooting 1
+Shooting 0
+Moving 1 0
+Moving 0 1
+Moving 0 -1
+Moving -1 0
+
+
